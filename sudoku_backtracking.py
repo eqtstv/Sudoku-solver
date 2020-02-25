@@ -1,5 +1,4 @@
 import time
-import grids
 
 def print_grid(arr):
     array = [list(map(str, x)) for x in arr]
