@@ -1,5 +1,4 @@
 # Sudoku-solver
 Sudoku game and backtracking algorithm
 
-![gif2](https://user-images.githubusercontent.com/38236287/76084729-e0e1d200-5fb0-11ea-8e72-3debc2663ca0.gif)
-
+![gif3](https://user-images.githubusercontent.com/38236287/76086803-230d1280-5fb5-11ea-8fcf-5c6847f2e94f.gif)
