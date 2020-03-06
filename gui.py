@@ -5,22 +5,20 @@ pygame.font.init()
 
 
 class Grid:
-    board = [
-        [7, 8, 0, 4, 0, 0, 1, 2, 0],
-        [6, 0, 0, 0, 7, 5, 0, 0, 9],
-        [0, 0, 0, 6, 0, 1, 0, 7, 8],
-        [0, 0, 7, 0, 4, 0, 2, 6, 0],
-        [0, 0, 1, 0, 5, 0, 9, 3, 0],
-        [9, 0, 4, 0, 6, 0, 0, 0, 5],
-        [0, 7, 0, 3, 0, 0, 0, 1, 2],
-        [1, 2, 0, 0, 0, 7, 4, 0, 0],
-        [0, 4, 9, 2, 0, 6, 0, 0, 7]
-    ]
+    grid=[[0, 3, 0, 0, 1, 0, 0, 6, 0],
+          [7, 5, 0, 0, 3, 0, 0, 4, 8],
+          [0, 0, 6, 9, 8, 4, 3, 0, 0],
+          [0, 0, 3, 0, 0, 0, 8, 0, 0],
+          [9, 1, 2, 0, 0, 0, 6, 7, 4],
+          [0, 0, 4, 0, 0, 0, 5, 0, 0],
+          [0, 0, 1, 6, 7, 5, 2, 0, 0],
+          [6, 8, 0, 0, 9, 0, 0, 1, 5],
+          [0, 9, 0, 0, 4, 0, 0, 3, 0]]
 
     def __init__(self, rows, cols, width, height, win):
         self.rows = rows
         self.cols = cols
-        self.cubes = [[Cube(self.board[i][j], i, j, width, height) for j in range(cols)] for i in range(rows)]
+        self.cubes = [[Cube(self.grid[i][j], i, j, width, height) for j in range(cols)] for i in range(rows)]
         self.width = width
         self.height = height
         self.model = None
@@ -135,6 +133,7 @@ class Grid:
                 self.update_model()
                 pygame.display.update()
                 pygame.time.delay(100)
+                pygame.event.pump()
 
                 if self.solve_gui():
                     return True
@@ -250,13 +249,13 @@ def solve_sudoku(array):
     return False
 
 
-def redraw_window(win, board, time, strikes):
+def redraw_window(win, grid, time, strikes):
     win.fill((255,255,255))
     # Draw time
     fnt = pygame.font.SysFont("Consolas", 30)
     text = fnt.render("Time: " + format_time(time), 1, (0,0,0))
     win.blit(text, (540 - 200, 560))
-    board.draw()
+    grid.draw()
 
 
 def format_time(secs):
@@ -271,7 +270,7 @@ def format_time(secs):
 def main():
     win = pygame.display.set_mode((540,600))
     pygame.display.set_caption("Sudoku")
-    board = Grid(9, 9, 540, 540, win)
+    grid = Grid(9, 9, 540, 540, win)
     key = None
     run = True
     start = time.time()
@@ -304,20 +303,20 @@ def main():
                 if event.key == pygame.K_9:
                     key = 9
                 if event.key == pygame.K_DELETE:
-                    board.clear()
+                    grid.clear()
                     key = None
 
                 if event.key == pygame.K_SPACE:
-                    board.solve_gui()
+                    grid.solve_gui()
 
                 if event.key == pygame.K_ESCAPE:
                     run = False
 
                 if event.key == pygame.K_RETURN:
-                    if board.selected:
-                        i, j = board.selected
-                        if board.cubes[i][j].temp != 0:
-                            board.place(board.cubes[i][j].temp)
+                    if grid.selected:
+                        i, j = grid.selected
+                        if grid.cubes[i][j].temp != 0:
+                            grid.place(grid.cubes[i][j].temp)
                                 #print("Success")
                                 #show success
                             #else:
@@ -325,20 +324,20 @@ def main():
                                 #strikes += 1
                             #key = None
 
-                            if board.is_finished():
+                            if grid.is_finished():
                                 print("Game over")
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 pos = pygame.mouse.get_pos()
-                clicked = board.click(pos)
+                clicked = grid.click(pos)
                 if clicked:
-                    board.select(clicked[0], clicked[1])
+                    grid.select(clicked[0], clicked[1])
                     key = None
 
-        if board.selected and key != None:
-            board.sketch(key)
+        if grid.selected and key != None:
+            grid.sketch(key)
 
-        redraw_window(win, board, play_time, strikes)
+        redraw_window(win, grid, play_time, strikes)
         pygame.display.update()
 
 
